@@ -1,8 +1,6 @@
 package com.config;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -24,17 +22,18 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AppConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         
-        http.sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize -> Authorize
                         .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN")
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
-                ).addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+                )
+                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-        return null;
+        return http.build();
     }
 
     private CorsConfigurationSource corsConfigurationSource() {

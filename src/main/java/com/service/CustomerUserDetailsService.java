@@ -23,11 +23,11 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Lógica para cargar el usuario desde la base de datos o cualquier otra fuente
-        // Si el usuario no se encuentra, lanzar UsernameNotFoundException
-
+        // Buscar usuario por email
         User user = userRepository.findByEmail(username);
-        if(user != null) {
+        
+        // Si NO existe, lanzar excepción
+        if(user == null) {
             throw new UsernameNotFoundException("User not found with email: " + username);
         }
 

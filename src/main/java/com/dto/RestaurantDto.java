@@ -14,7 +14,7 @@ public class RestaurantDto {
 
 
     @Column(length = 1000)
-    private List<String> image;
+    private List<String> images;
 
 
     private String description;

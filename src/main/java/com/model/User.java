@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dto.RestaurantDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
@@ -31,7 +32,8 @@ public class User {
     private String FullName;
 
     private String email;
-    
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // no enviar respuesta con el password
     private String password;
 
     private USER_ROLE role= USER_ROLE.ROLE_CUSTOMER;

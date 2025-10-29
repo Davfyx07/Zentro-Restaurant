@@ -69,20 +69,22 @@ public class RestaurantServiceImp implements RestaurantService {
 	@Override
 	public void deleteRestaurant(Long restaurantId) throws Exception {
 		// TODO Auto-generated method stub
-		Restaurant restaurant = findRestaurantByID(restaurantId);
+		Restaurant restaurant = findRestaurantByID(restaurantId); 
         restaurantRepository.delete(restaurant);
 	}
 
 	@Override
-	public Restaurant findRestaurantByID(Long id) throws Exception {
+	public Restaurant findRestaurantByID(Long id) throws Exception { //findRestaurantByID
 		// TODO Auto-generated method stub
         Optional<Restaurant> opt = restaurantRepository.findById(id);
 
-        if(opt.isEmpty()) {
-            throw new Exception("Restaurant not found whit id"+id);
+        if(opt.isEmpty()) { 
+            throw new Exception("Restaurant not found whit id"+id); 
         }
 		return opt.get();
 	}
+
+	
 
 	@Override
 	public Restaurant getRestaurantByUserId(Long userId) throws Exception {
@@ -110,20 +112,29 @@ public class RestaurantServiceImp implements RestaurantService {
 	public RestaurantDto addToFavorite(Long restaurantId, User user) throws Exception {
 		// TODO Auto-generated method stub
 		Restaurant restaurant = findRestaurantByID(restaurantId);
+
         RestaurantDto dto = new RestaurantDto();
+		dto.setDescription(restaurant.getDescription());
         dto.setImages(restaurant.getImages());
         dto.setTitle(restaurant.getName());
-        dto.setId(restaurant.getId());
+        dto.setId(restaurantId);
 
-        if(user.getFavorites().contains(dto)) {
-            user.getFavorites().remove(dto);
-        }
-        else user.getFavorites().add(dto);
-
-        userRepository.save(user);
-        return dto;
+		boolean isFavorited = false;
+		List<RestaurantDto> favorites = user.getFavorites();
+		for(RestaurantDto favorite : favorites) {
+			if(favorite.getId().equals(restaurantId)) {
+				isFavorited = true;
+				break;
+			}
+		}
+		if (isFavorited) {
+			favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
+		} else {
+			favorites.add(dto);
+		}
+		userRepository.save(user);
+		return dto;
 	}
-
 	@Override
 	public Restaurant updateRestaurantStatus(Long id) throws Exception {
 		// TODO Auto-generated method stub
